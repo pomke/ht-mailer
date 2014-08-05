@@ -35,14 +35,14 @@ You can now communicate with it using the hudson-taylor client library, ie:
 
 ```javascript
 var s = new ht.Services();
-s.connect("mailer", new ht.HTTPClient("localhost", 7001));
+s.connect("mailer", new ht.HTTPClient("mailer", "localhost", 7001));
 ```
 
-Send a templated message to two people:
+Send a templated message to jemma:
 
 ```javascript
 var msg = { 
-    to : ['ryan@example.com', 'jemma@example.com'],
+    to : 'jemma@example.com',
     from : 'mel@example.com',
     subject : 'Example email',
     data : { /* arguments to handlebars template */ },
@@ -118,3 +118,23 @@ Example setup using SES transport, with some pre-defined templates
     }
 }
 ```
+
+
+### Templates
+
+All tempaltes use [handlebars](https://www.npmjs.org/package/handlebars) 
+notation, which will be populated with the data provided to the send API.
+
+Special keys you can use in templates, further to the data the caller provides
+are:
+
+* unsubscribeToken  - This token can be passed to the unsubscribe API, which
+  will block email being sent to this address in the future. ie:
+  ```html
+  <a href='http://example.com/unsub/{{unsubscribeToken}}'>Unsubscribe here.</a>
+  ```
+
+Templates are configured via the tempaltes attribute in the config JSON, and 
+can contain a file path for: markdown, text, html. 
+
+If type markdown is provided, it will be used to produce html AND text output.
