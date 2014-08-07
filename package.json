@@ -1,6 +1,6 @@
 {
   "name": "ht-mailer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A hudson-taylor mailer service that keeps blacklists and a mail queue in mongoDB.",
   "keywords" : ["email", "ht", "hudson-taylor", "mongo"],
   "scripts": {
@@ -9,6 +9,7 @@
   "author": "Pomke",
   "license": "MIT",
   "repository" : "git@github.com:pomke/ht-mailer.git",
+  "main" : "./lib/service",
   "dependencies" : {
     "hudson-taylor" : "0.0.7",
     "attrition" : "0.0.4",
