@@ -5,7 +5,7 @@ var service = require('../lib/service');
 
 describe("ht-mailer", function() {
 
-    var db, client;
+    var db, client, testBucket = [];
 
     before(function(done){
         var config = require('../config/test');
@@ -15,7 +15,7 @@ describe("ht-mailer", function() {
                 db = database;
                 client = new ht.Services();
                 client.connect("mail", 
-                    new ht.LocalClient("mail", service.setup, config, db));
+                    new ht.LocalClient("mail", service.setup, config, db, testBucket));
                 done();
             });
     });
@@ -24,7 +24,22 @@ describe("ht-mailer", function() {
             db.dropDatabase(done);
     });
 
-    it("should queue and send a message", function(done) {
+    it("should queue emails to send", function(done) {
+        var testEmail = {
+            to : ['mel@example.com'],
+            from : 'bev@example.com',
+            subject : 'Test email {{number}}',
+            text : 'Heya {{name}}, can we meet up at {{date}}?',
+            data : {number : 123, date : new Date(), name : 'Melanie'}
+        }
+        client.remote('mail', 'queue', testEmail, function(err, res) {
+            if(err) throw err;
+            assert.equal(res[0].subject, 'Test email 123');
+            done();
+        });
+    });
+
+    it("should load a template email", function(done) {
         var testEmail = {
             to : ['mel@example.com'],
             from : 'bev@example.com',
@@ -33,13 +48,49 @@ describe("ht-mailer", function() {
             data : {number : 123, date : new Date(), name : 'Melanie'}
         }
         client.remote('mail', 'queue', testEmail, function(err, res) {
-            console.log('>>>>', typeof err.error, res);
             if(err) throw err;
-            console.log(res);
+            assert.equal(res[0].subject, 'Test email 123');
             done();
         });
     });
 
+    it("should deliver queued email", function(done) {
+        var testEmail = {
+            to : ['mel@example.com'],
+            from : 'bev@example.com',
+            subject : 'Test email {{number}}',
+            template : 'test1',
+            data : {number : 123, date : new Date(), name : 'Melanie'}
+        }
+        client.remote('mail', 'queue', testEmail, function(err, res) {
+            if(err) throw err;
+            checkBucket(2, function(info) {
+                assert.equal(info.envelope.from, 'bev@example.com');
+                done();
+            });
+        });
+    });
+
+    it("should not deliver mail to a blacklisted account", function(done) {
+        var testEmail = {
+            to : ['mel@example.com'],
+            from : 'bev@example.com',
+            subject : 'Test email {{number}}',
+            template : 'test1',
+            data : {number : 123, date : new Date(), name : 'Melanie'}
+        }
+
+        client.remote('mail', 'blockEmail', {email : 'mel@example.com'}, function(err, res) {
+            if(err) throw err;
+            assert.equal(res.blocked, true);
+            done();
+        });
+    });
+
+    function checkBucket(index, callback) {
+        if(testBucket[index])  return callback(testBucket[index]);
+        setTimeout(function(){checkBucket(index, callback);}, 200);
+    }
 
 });
 
