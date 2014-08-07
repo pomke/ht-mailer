@@ -1,7 +1,7 @@
 {
   "name": "ht-mailer",
   "version": "0.0.2",
-  "description": "A hudson-taylor mailer service that keeps blacklists and mail queue in mongoDB.",
+  "description": "A hudson-taylor mailer service that keeps blacklists and a mail queue in mongoDB.",
   "keywords" : ["email", "ht", "hudson-taylor", "mongo"],
   "scripts": {
     "test": "mocha --reporter spec --bail --check-leaks test/"

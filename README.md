@@ -25,7 +25,7 @@ in-process via the hudson-taylor LocalClient connector.
 
 ### Using ht-mailer as a stand-alone service. 
 
- * Edit /config/production.json (or development.json etc) and add your config.
+ * copy config/example.json to config/production.json (or development.json etc) and add your config.
 
 ```bash 
 $> NODE_ENV=production node server.js
@@ -35,17 +35,17 @@ You can now communicate with it using the hudson-taylor client library, ie:
 
 ```javascript
 var s = new ht.Services();
-s.connect("mailer", new ht.HTTPClient("mailer", "localhost", 7001));
+s.connect("mail", new ht.HTTPClient("mail", "localhost", 7001));
 ```
 
 Send a templated message to jemma:
 
 ```javascript
 var msg = { 
-    to : 'jemma@example.com',
+    to : ['jemma@example.com'],
     from : 'mel@example.com',
-    subject : 'Example email',
-    data : { /* arguments to handlebars template */ },
+    subject : 'Example Email {{foo}}',
+    data : { foo : 123 },
     template : 'approval' // name of the template to use
 }
 
@@ -60,9 +60,10 @@ Send a regular text/html email to one person:
 var msg = { 
     to : ['joe@example.com'],
     from : 'mel@example.com',
-    subject : 'Example email',
-    text : "Hi Joe!",
-    html : "<h1>Hi Joe!</h1>"
+    subject : 'Example email to {{name}}',
+    data : { name : "Joe" }
+    text : "Hi {{name}}!",
+    html : "<h1>Hi {{name}}!</h1>"
 }
 
 s.remote("mailer", "send", msg, function(err, res) {
@@ -84,8 +85,7 @@ var db; // Set up a mongodb connection here
 
 server.add("mailer", mailer.setup, config, db);
 
-
-
+// Start communicating with an ht client/json-rpc
 ```
 
 ### Config options
@@ -102,9 +102,9 @@ Example setup using SES transport, with some pre-defined templates
 
         tansport : {
             type : 'SES', //or SMTP, etc
-            arguments : {
-                AWSAccessKeyID : '123..',
-                AWSSecretKey : '456..'
+            'SES-arguments' : {
+                accessKeyID : '123..',
+                secretAccessKey : '456..'
             }
         }, 
 

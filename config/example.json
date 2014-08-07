@@ -1,0 +1,24 @@
+{ 
+    "ht-mailer" : {
+        "port" : 7001,
+        "mongoURI" : "mongodb://localhost:27017/myDatabase",
+        "transport" : {
+            "type" : "SMTP",
+            "SMTP-arguments" : {
+                "host" : "localhost",
+                "port" : 25,
+                "auth" : {
+                    "user" : "username",
+                    "pass" : "password"
+                }
+            }
+        }, 
+        "templates" : {
+            "exampleTemplate" : {"markdown" : "/var/email/templates/test1.md"},
+            "exampleTemplate2" : {
+                "html" : "/var/email/templates/test2.html",
+                "text" : "/var/email/templates/test2.txt"
+            }
+        }
+    }
+}
