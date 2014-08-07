@@ -1,0 +1,13 @@
+{ 
+    'ht-mailer' : {
+        'port' : 7001,
+        'mongoURI' : 'mongodb://localhost:27017/test_mailer',
+
+        'tansport' : {
+            'type' : 'STUB', 
+        }, 
+        'templates' : {
+            'test1' : {'markdown' : './test/templates/test1.md'}
+        }
+    }
+}

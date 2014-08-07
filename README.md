@@ -134,6 +134,11 @@ are:
   <a href='http://example.com/unsub/{{unsubscribeToken}}'>Unsubscribe here.</a>
   ```
 
+  Note, when passing multiple email addresses in the 'to' field, the unsubscribe
+  token will only apply to the first address in the list. I don't recommend using
+  unsubscribeToken in an email with multiple to recipients, it doesn't make much
+  sense.
+
 Templates are configured via the tempaltes attribute in the config JSON, and 
 can contain a file path for: markdown, text, html. 
 
