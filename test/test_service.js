@@ -49,7 +49,7 @@ describe("ht-mailer", function() {
         }
         client.remote('mail', 'send', testEmail, function(err, res) {
             if(err) throw err;
-            checkBucket(3, function(info) {
+            checkBucket(1, function(info) {
                 assert.equal(info.envelope.from, 'bev@example.com');
                 done();
             });
