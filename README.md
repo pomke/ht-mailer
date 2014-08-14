@@ -21,7 +21,48 @@ in-process via the hudson-taylor LocalClient connector.
  * ht-mailer currently requires a MongoDB DB handle which it uses to store 
    blacklists and message queues. In the future this can be made pluggable.
 
+### Public API
 
+##### queue
+
+Queue an email message to be delivered.
+
+```javascript
+s.remote("mailer", "queue", msg, callback);
+```
+
+##### send
+
+Skip the queue and send directly
+
+```javascript
+s.remote("mailer", "send", msg, callback);
+```
+
+##### blockToken
+
+Block an email address that corresponds to token
+
+```javascript
+s.remote("mailer", "blockToken", {token : <token>}, callback);
+```
+
+##### blockEmail
+
+Block an email address 
+
+```javascript
+s.remote("mailer", "blockEmail", {email : <email>}, callback);
+```
+
+
+##### unblockEmail
+
+Unblock an email address 
+
+```javascript
+s.remote("mailer", "unblockEmail", {email : <email>}, callback);
+```
 
 ### Using ht-mailer as a stand-alone service. 
 
@@ -49,7 +90,7 @@ var msg = {
     template : 'approval' // name of the template to use
 }
 
-s.remote("mailer", "send", msg, function(err, res) { 
+s.remote("mailer", "queue", msg, function(err, res) { 
     // Do things with the response here! 
 });
 ```
@@ -66,7 +107,7 @@ var msg = {
     html : "<h1>Hi {{name}}!</h1>"
 }
 
-s.remote("mailer", "send", msg, function(err, res) {
+s.remote("mailer", "queue", msg, function(err, res) {
     // do stuff!
 });
 ``` 

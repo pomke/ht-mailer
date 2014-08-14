@@ -39,6 +39,24 @@ describe("ht-mailer", function() {
         });
     });
 
+    it("should directly send emails", function(done) {
+        var testEmail = {
+            to : ['mel@example.com'],
+            from : 'bev@example.com',
+            subject : 'Test email {{number}}',
+            text : 'Heya {{name}}, can we meet up at {{date}}?',
+            data : {number : 123, date : new Date(), name : 'Melanie'}
+        }
+        client.remote('mail', 'send', testEmail, function(err, res) {
+            if(err) throw err;
+            checkBucket(3, function(info) {
+                assert.equal(info.envelope.from, 'bev@example.com');
+                done();
+            });
+        });
+    });
+
+
     it("should load a template email", function(done) {
         var testEmail = {
             to : ['mel@example.com'],
@@ -86,6 +104,8 @@ describe("ht-mailer", function() {
             done();
         });
     });
+
+
 
     function checkBucket(index, callback) {
         if(testBucket[index])  return callback(testBucket[index]);
