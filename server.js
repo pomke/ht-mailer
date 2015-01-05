@@ -1,3 +1,6 @@
+
+"use strict";
+
 var path = require("path");
 var ht = require("hudson-taylor");
 var mongodb = require("mongodb");
@@ -8,8 +11,11 @@ mongodb.MongoClient.connect(config['ht-mailer'].mongoURI, setup);
 
 function setup(err, db) {
     if(err) throw err;
-    var server = new ht.Server();
-    server.add("mail", mailer.setup, config, db);
-    server.listenHTTP({port : config['ht-mailer'].port});
-    console.log("ht-mailer running on port", config['ht-mailer'].port);
+    var transport = new ht.Transports.HTTP({ port: config['ht-mailer'].port });
+
+    var service = mailer.setup(transport, config, db);
+
+    service.listen(function() {
+      console.log("ht-mailer running on port", config['ht-mailer'].port);
+    });
 }

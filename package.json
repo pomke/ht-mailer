@@ -1,6 +1,6 @@
 {
   "name": "ht-mailer",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "A hudson-taylor mailer service that keeps blacklists and a mail queue in mongoDB.",
   "keywords": [
     "email",
@@ -19,7 +19,8 @@
     "async": "0.9.0",
     "attrition": "0.0.4",
     "handlebars": "2.0.0-alpha.4",
-    "hudson-taylor": "0.0.12",
+    "hudson-taylor": "^2.0.0",
+    "ht-schema": "^0.0.5",
     "mailparser": "^0.4.6",
     "nodemailer": "1.1.1",
     "nodemailer-markdown": "0.1.2",
